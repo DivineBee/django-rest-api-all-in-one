@@ -1,0 +1,11 @@
+[
+  {
+    "database": "postgres",
+    "index": "product",
+    "nodes": {
+      "table": "task_product",
+      "schema": "public",
+      "columns": []
+      }
+  }
+]

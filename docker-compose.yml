@@ -1,0 +1,87 @@
+version: "3.9"
+
+services:
+#  db:
+#    image: postgres:12.0-alpine
+#    volumes:
+#      - db:/var/lib/postgresql/data
+#    environment:
+#      - POSTGRES_DB=postgres
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=postgres
+#  web:
+#    build: .
+#    command: python manage.py runserver 0.0.0.0:8000
+#    volumes:
+#      - .:/usr/src/app/
+#    ports:
+#      - "8000:8000"
+#    environment:
+#      - POSTGRES_NAME=postgres
+#      - POSTGRES_USER=postgres
+#      - POSTGRES_PASSWORD=postgres
+#    depends_on:
+#      - db
+  database:
+    build:
+      context: .
+      dockerfile: PostgresDockerfile
+    container_name: database
+    ports:
+      - '5432:5432'
+    environment:
+      - POSTGRES_PASSWORD=postgres
+
+  redis:
+    image: 'redis:alpine'
+    container_name: redis
+    ports:
+      - '6379:6379'
+
+  elasticsearch:
+      image: docker.elastic.co/elasticsearch/elasticsearch:7.13.4
+      container_name: elasticsearch
+      environment:
+        - xpack.security.enabled=false
+        - discovery.type=single-node
+        - bootstrap.memory_lock=true
+        - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+      ulimits:
+        memlock:
+          soft: -1
+          hard: -1
+      ports:
+        - '9200:9200'
+
+  kibana:
+    image: docker.elastic.co/kibana/kibana:7.13.4
+    depends_on:
+      - elasticsearch
+    ports:
+      - '5601:5601'
+    environment:
+      - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+  pgsync:
+    build:
+      context: .
+      dockerfile: PgsyncDockerfile
+    command: ./entrypoint.sh
+    container_name: pgsync
+    environment:
+      - PG_USER=postgres
+      - PG_PASSWORD=postgres
+      - PG_DATABASE=postgres
+      - PG_HOST=database
+      - ELASTICSEARCH_HOST=elasticsearch
+      - REDIS_HOST=redis
+    depends_on:
+      - database
+      - redis
+      - elasticsearch
+volumes:
+  database:
+  pgsync:
+  redis:
+#  db:
+#    ports:
+#      - 6379:6379
