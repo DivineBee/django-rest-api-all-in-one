@@ -1,32 +1,49 @@
-version: "3.9"
+version: "3.8"
 
 services:
-#  db:
-#    image: postgres:12.0-alpine
-#    volumes:
-#      - db:/var/lib/postgresql/data
-#    environment:
-#      - POSTGRES_DB=postgres
-#      - POSTGRES_USER=postgres
-#      - POSTGRES_PASSWORD=postgres
-#  web:
-#    build: .
-#    command: python manage.py runserver 0.0.0.0:8000
-#    volumes:
-#      - .:/usr/src/app/
-#    ports:
-#      - "8000:8000"
+  web:
+    build: .
+    command: >
+      sh -c "python manage.py makemigrations &&
+             python manage.py migrate &&
+             python manage.py runserver 0.0.0.0:8000 &&
+             python manage.py search_index --create -f &&
+             manage.py search_index --populate -f"
+    volumes:
+      - .:/usr/src/app/
+    ports:
+      - "8000:8000"
+    env_file: djangoProject/.env
 #    environment:
 #      - POSTGRES_NAME=postgres
 #      - POSTGRES_USER=postgres
 #      - POSTGRES_PASSWORD=postgres
+    depends_on:
+      - database
+      - elasticsearch
+
+#  web:
+#    build:
+#      context: .
+#    command: >
+#      sh -c "python manage.py migrate &&
+#             python manage.py runserver 0.0.0.0:8000"
+#    ports:
+#      - "8000:8000"
+#    env_file: .env
+#    volumes:
+#      - .:/usr/src/app
 #    depends_on:
-#      - db
+#      - database
+
   database:
     build:
       context: .
       dockerfile: PostgresDockerfile
     container_name: database
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    env_file: djangoProject/.env
     ports:
       - '5432:5432'
     environment:
@@ -39,28 +56,29 @@ services:
       - '6379:6379'
 
   elasticsearch:
-      image: docker.elastic.co/elasticsearch/elasticsearch:7.13.4
-      container_name: elasticsearch
-      environment:
-        - xpack.security.enabled=false
-        - discovery.type=single-node
-        - bootstrap.memory_lock=true
-        - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
-      ulimits:
-        memlock:
-          soft: -1
-          hard: -1
-      ports:
-        - '9200:9200'
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.8.16
+    container_name: elasticsearch
+    environment:
+#      - xpack.security.enabled=false
+      - discovery.type=single-node
+#      - bootstrap.memory_lock=true
+#      - 'ES_JAVA_OPTS=-Xms512m -Xmx512m'
+    ulimits:
+      memlock:
+        soft: -1
+        hard: -1
+    ports:
+      - '9200:9200'
 
   kibana:
-    image: docker.elastic.co/kibana/kibana:7.13.4
+    image: docker.elastic.co/kibana/kibana:6.8.16
     depends_on:
       - elasticsearch
     ports:
       - '5601:5601'
     environment:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
+
   pgsync:
     build:
       context: .
@@ -79,9 +97,6 @@ services:
       - redis
       - elasticsearch
 volumes:
-  database:
-  pgsync:
-  redis:
-#  db:
-#    ports:
-#      - 6379:6379
+  postgres_data:
+#  pgsync:
+#  redis:

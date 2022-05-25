@@ -6,10 +6,16 @@ class Product(models.Model):
     title = models.CharField(max_length=200)
     weight = models.FloatField()
     price = models.FloatField()
-    category = models.ForeignKey('Category', on_delete=models.CASCADE)
+    category = models.ForeignKey('Category', on_delete=models.CASCADE, related_name='products')
 
     def __str__(self):
         return self.title
+
+    @property
+    def category_indexing(self):
+        """Category for indexing.  Used in Elasticsearch indexing."""
+        if self.category is not None:
+            return self.category.title
 
 
 class Category(models.Model):
@@ -20,6 +26,7 @@ class Category(models.Model):
         return self.title
 
     class Meta:
+        ordering = ['id']
         verbose_name_plural = 'Categories'
 
 

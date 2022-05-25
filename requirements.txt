@@ -1,4 +1,9 @@
-Django==4.0.4
-psycopg2>=2.8
+Django<=3
+psycopg2<=2.8
 celery>=5.2.6
 djangorestframework==3.13.1
+elasticsearch~=6.0
+elasticsearch-dsl~=6.0
+django.elasticsearch-dsl~=6.0
+django.elasticsearch-dsl-drf
+django-environ
