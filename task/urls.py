@@ -1,6 +1,6 @@
 from django.urls import path, include
-from .views import ProductRetrieveUpdateDestroy, ProductList, \
-    ProductDocumentViewElasticSearch, CategoryRetrieveUpdateDestroy, CategoryList
+from .views import ProductRetrieveUpdateDestroy, ProductList, UploadCategoryView, \
+    ProductDocumentViewElasticSearch, CategoryRetrieveUpdateDestroy, CategoryList, UploadProductView
 from rest_framework.routers import DefaultRouter
 
 app_name = 'task'
@@ -16,6 +16,7 @@ urlpatterns = [
     path('product_list/<int:pk>', ProductRetrieveUpdateDestroy.as_view()),
     path('category_list/<int:pk>', CategoryRetrieveUpdateDestroy.as_view()),
     path(r'search/', include(router.urls)),
+    path(r'upload-category/', UploadCategoryView.as_view()),
+    path(r'upload-product/', UploadProductView.as_view()),
 ]
 
-# urlpatterns += router.urls

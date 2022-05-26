@@ -1,0 +1,50 @@
+[
+  {
+    "title": "keyboard",
+    "weight": 0.34,
+    "price": 324.0,
+    "category": 1
+  },
+  {
+    "title": "mouse",
+    "weight": 0.324,
+    "price": 3243.0,
+    "category": 1
+  },
+  {
+    "title": "PC",
+    "weight": 5.34,
+    "price": 32432.20,
+    "category": 1
+  },
+  {
+    "title": "Eyeliner",
+    "weight": 0.024,
+    "price": 444.0,
+    "category": 9
+  },
+  {
+    "title": "mascara",
+    "weight": 0.34,
+    "price": 164.0,
+    "category": 9
+  },
+  {
+    "title": "milk",
+    "weight": 0.454,
+    "price": 23.0,
+    "category": 7
+  },
+  {
+    "title": "bread",
+    "weight": 0.194,
+    "price": 4.0,
+    "category": 7
+  },
+  {
+    "title": "airpods",
+    "weight": 0.100,
+    "price": 2543.0,
+    "category": 7
+  }
+]

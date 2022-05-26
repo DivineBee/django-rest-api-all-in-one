@@ -17,6 +17,9 @@ class Product(models.Model):
         if self.category is not None:
             return self.category.title
 
+    class Meta:
+        ordering = ['id']
+
 
 class Category(models.Model):
     # db_index used because categories are unique and it will make the lookup more efficient
