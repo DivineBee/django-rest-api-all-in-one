@@ -38,4 +38,3 @@ def delete_document(sender, **kwargs):
             instances = instance.product.all()
             for _instance in instances:
                 registry.update(_instance)
-                # registry.delete(_instance, raise_on_error=False)

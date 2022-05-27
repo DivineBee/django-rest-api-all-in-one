@@ -1,8 +1,8 @@
 from django.contrib.auth import get_user_model
 from firebase_admin import auth
-from rest_framework import generics, permissions, views, viewsets
-from rest_framework.decorators import action, APIView
-from rest_framework.parsers import FileUploadParser, JSONParser, MultiPartParser
+from rest_framework import generics, permissions
+from rest_framework.decorators import APIView
+from rest_framework.parsers import JSONParser, MultiPartParser
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 import json
@@ -100,8 +100,7 @@ class UploadProductView(APIView):
 # List all products
 class ProductList(generics.ListCreateAPIView):
     serializer_class = ProductSerializer  # reference to serializer class
-
-    # permission_classes = [permissions.IsAuthenticated]  # allow only authenticated users
+    permission_classes = [permissions.IsAuthenticated]  # allow only authenticated users
 
     def get_queryset(self):  # without a defined query set it will not work
         return Product.objects.order_by('title')  # order products by their title
@@ -110,8 +109,7 @@ class ProductList(generics.ListCreateAPIView):
 # CRUD per product. Handled completely by the rest framework.
 class ProductRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = ProductSerializer
-
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return Product.objects.order_by('title')
@@ -120,8 +118,7 @@ class ProductRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
 # List all categories
 class CategoryList(generics.ListCreateAPIView):
     serializer_class = CategorySerializer
-
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return Category.objects.order_by('title')
@@ -130,8 +127,7 @@ class CategoryList(generics.ListCreateAPIView):
 # CRUD per category
 class CategoryRetrieveUpdateDestroy(generics.RetrieveUpdateDestroyAPIView):
     serializer_class = CategorySerializer
-
-    # permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
         return Category.objects.order_by('title')

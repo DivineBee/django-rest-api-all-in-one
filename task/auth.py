@@ -1,4 +1,3 @@
-import firebase_admin
 from django.contrib.auth import get_user_model
 from firebase_admin import auth, credentials
 from rest_framework.authentication import BaseAuthentication

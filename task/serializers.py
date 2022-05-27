@@ -13,7 +13,6 @@ class CategorySerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
-        # read_only = True
         fields = ['id', 'title', 'weight', 'price', 'category']
         extra_kwargs = {
             'category': {'allow_null': True, 'required': False},
