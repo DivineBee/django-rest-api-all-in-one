@@ -1,6 +1,9 @@
+from django.contrib.auth import get_user_model
+from firebase_admin import auth
 from rest_framework import generics, permissions, views, viewsets
 from rest_framework.decorators import action, APIView
 from rest_framework.parsers import FileUploadParser, JSONParser, MultiPartParser
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 import json
 from task.models import Product, Category
@@ -186,3 +189,22 @@ class ProductDocumentViewElasticSearch(BaseDocumentViewSet):
     }
     # Specify default ordering
     ordering = ('id',)
+
+
+class AuthenticatedView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response({'message': 'You Are Authenticated', 'user': request.user.username})
+
+
+class RegisterUser(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        User = get_user_model()
+        user = User.objects.get(username=request.user.username)
+        firebase_data = auth.get_user(user.username)
+        user.email = firebase_data.email
+        user.save()
+        return Response({'message': 'User Registered'})

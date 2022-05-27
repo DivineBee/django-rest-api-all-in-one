@@ -2,6 +2,9 @@ from pathlib import Path
 import os
 import environ
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+import firebase_admin
+from firebase_admin import credentials
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env(
@@ -143,4 +146,13 @@ ELASTICSEARCH_DSL = {
 
 ELASTICSEARCH_INDEX_NAMES = {
     'task.documents': 'product',
+}
+
+cred = credentials.Certificate(os.path.join(BASE_DIR, "djangoProject/firebase-adminsdk.json"))
+firebase_admin.initialize_app(cred)
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'task.auth.FirebaseAuthentication',
+    ]
 }

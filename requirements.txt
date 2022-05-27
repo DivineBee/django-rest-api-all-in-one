@@ -7,3 +7,4 @@ elasticsearch-dsl~=6.0
 django.elasticsearch-dsl~=6.0
 django.elasticsearch-dsl-drf
 django-environ
+firebase-admin>=5.0

@@ -1,6 +1,7 @@
 from django.urls import path, include
 from .views import ProductRetrieveUpdateDestroy, ProductList, UploadCategoryView, \
-    ProductDocumentViewElasticSearch, CategoryRetrieveUpdateDestroy, CategoryList, UploadProductView
+    ProductDocumentViewElasticSearch, CategoryRetrieveUpdateDestroy, CategoryList, UploadProductView,\
+    AuthenticatedView, RegisterUser
 from rest_framework.routers import DefaultRouter
 
 app_name = 'task'
@@ -18,5 +19,7 @@ urlpatterns = [
     path(r'search/', include(router.urls)),
     path(r'upload-category/', UploadCategoryView.as_view()),
     path(r'upload-product/', UploadProductView.as_view()),
+    path('verified', AuthenticatedView.as_view()),
+    path('register', RegisterUser.as_view()),
 ]
 
