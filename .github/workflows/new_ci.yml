@@ -5,7 +5,17 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-  
+
+env:
+  SECRET_KEY: ${{secrets.SECRET_KEY}}
+  ALLOWED_HOSTS: ${{secrets.ALLOWED_HOSTS}}
+  DEBUG: ${{secrets.DEBUG}}
+  POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
+  POSTGRES_NAME: ${{secrets.POSTGRES_NAME}}
+  POSTGRES_USER: ${{secrets.POSTGRES_USER}}
+  POSTGRES_DB: ${{secrets.POSTGRES_DB}}
+  DATABASE_URL: ${{secrets.DATABASE_URL}}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,15 +34,6 @@ jobs:
 
     - name: Rebuild and restart containers
       uses: appleboy/ssh-action@master
-      env:
-        SECRET_KEY: ${{secrets.SECRET_KEY}}
-        ALLOWED_HOSTS: ${{secrets.ALLOWED_HOSTS}}
-        DEBUG: ${{secrets.DEBUG}}
-        POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
-        POSTGRES_NAME: ${{secrets.POSTGRES_NAME}}
-        POSTGRES_USER: ${{secrets.POSTGRES_USER}}
-        POSTGRES_DB: ${{secrets.POSTGRES_DB}}
-        DATABASE_URL: ${{secrets.DATABASE_URL}}
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
