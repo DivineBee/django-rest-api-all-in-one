@@ -10,14 +10,34 @@ jobs:
   docker:
     timeout-minutes: 10
     runs-on: ubuntu-latest
+    env:
+      ALLOWED_HOSTS: ${{ secrets.ALLOWED_HOSTS }}
+      DEBUG: ${{ secrets.DEBUG }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_NAME: ${{ secrets.POSTGRES_NAME }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v1
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+            key: ${{ secrets.SSH_PRIVATE_KEY }}
+            known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
 
-    - name: Start containers
-      run: docker-compose -f "docker-compose.yml" up -d --build
+      - name: Deploy with rsync
+        run: rsync -avz ./dist/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:/project-python/django-rest-api-all-in-one/
 
-    - name: Stop containers
-      if: always()
-      run: docker-compose -f "docker-compose.yml" down
+      - name: Adding Known Hosts
+        run: ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
+
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Start containers
+        run: docker-compose --env-file ./.env.ci -f "docker-compose-ci.yml" up -d --build
+
+      - name: Stop containers
+        if: always()
+        run: docker-compose -f "docker-compose-ci.yml" down
