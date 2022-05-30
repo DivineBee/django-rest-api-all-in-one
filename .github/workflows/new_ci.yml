@@ -41,6 +41,6 @@ jobs:
           
           cd /var/www/ci.dev/
           docker-compose -f docker-compose-ci.yml down
-          docker-compose -f --env-file .env docker-compose-ci.yml up -d --build
+          docker-compose -f docker-compose-ci.yml up -d --build
           docker-compose -f docker-compose-ci.yml exec -T main python manage.py makemigrations
           docker-compose -f docker-compose-ci.yml exec -T main python manage.py migrate
