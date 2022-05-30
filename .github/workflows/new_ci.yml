@@ -19,7 +19,7 @@ jobs:
             known_hosts: 'just-a-placeholder-so-we-dont-get-errors'
             
       - name: Deploy with rsync
-        run: rsync -n ./dist/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:./project-python/django-rest-api-all-in-one/
+        run: rsync -n ./django-rest-api-all-in-one/ ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }}:.
 
       - name: Adding Known Hosts
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
