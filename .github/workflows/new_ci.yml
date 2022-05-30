@@ -31,14 +31,14 @@ jobs:
         port: 22
         script: |
           touch .env
-          echo "SECRET_KEY=${{secrets.SECRET_KEY}}" >> .env
-          echo "ALLOWED_HOSTS=${{secrets.ALLOWED_HOSTS}}" >> .env
-          echo "DEBUG=${{secrets.DEBUG}}" >> .env
-          echo "POSTGRES_PASSWORD=${{secrets.POSTGRES_PASSWORD}}" >> .env
-          echo "POSTGRES_NAME=${{secrets.POSTGRES_NAME}}" >> .env
-          echo "POSTGRES_USER=${{secrets.POSTGRES_USER}}" >> .env
-          echo "POSTGRES_DB=${{secrets.POSTGRES_DB}}" >> .env
-          echo "DATABASE_URL=${{secrets.DATABASE_URL}}" >> .env
+          export SECRET_KEY=${{secrets.SECRET_KEY}}
+          export ALLOWED_HOSTS=${{secrets.ALLOWED_HOSTS}}
+          export DEBUG=${{secrets.DEBUG}}
+          export POSTGRES_PASSWORD=${{secrets.POSTGRES_PASSWORD}}
+          export POSTGRES_NAME=${{secrets.POSTGRES_NAME}}
+          export POSTGRES_USER=${{secrets.POSTGRES_USER}}
+          export POSTGRES_DB=${{secrets.POSTGRES_DB}}
+          export DATABASE_URL=${{secrets.DATABASE_URL}}
           cd /var/www/ci.dev/
           docker-compose -f docker-compose-ci.yml down
           docker-compose -f docker-compose-ci.yml up -d --build
