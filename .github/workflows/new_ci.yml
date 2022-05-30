@@ -5,7 +5,7 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
-
+  
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -24,21 +24,21 @@ jobs:
 
     - name: Rebuild and restart containers
       uses: appleboy/ssh-action@master
+      env:
+        SECRET_KEY: ${{secrets.SECRET_KEY}}
+        ALLOWED_HOSTS: ${{secrets.ALLOWED_HOSTS}}
+        DEBUG: ${{secrets.DEBUG}}
+        POSTGRES_PASSWORD: ${{secrets.POSTGRES_PASSWORD}}
+        POSTGRES_NAME: ${{secrets.POSTGRES_NAME}}
+        POSTGRES_USER: ${{secrets.POSTGRES_USER}}
+        POSTGRES_DB: ${{secrets.POSTGRES_DB}}
+        DATABASE_URL: ${{secrets.DATABASE_URL}}
       with:
         host: ${{ secrets.SSH_HOST }}
         username: ${{ secrets.SSH_USER }}
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         port: 22
         script: |
-          echo "SECRET_KEY=${{secrets.SECRET_KEY}}" >> .env
-          echo "ALLOWED_HOSTS=${{secrets.ALLOWED_HOSTS}}" >> .env
-          echo "DEBUG=${{secrets.DEBUG}}" >> .env
-          echo "POSTGRES_PASSWORD=${{secrets.POSTGRES_PASSWORD}}" >> .env
-          echo "POSTGRES_NAME=${{secrets.POSTGRES_NAME}}" >> .env
-          echo "POSTGRES_USER=${{secrets.POSTGRES_USER}}" >> .env
-          echo "POSTGRES_DB=${{secrets.POSTGRES_DB}}" >> .env
-          echo "DATABASE_URL=${{secrets.DATABASE_URL}}" >> .env
-          
           cd /var/www/ci.dev/
           docker-compose -f docker-compose-ci.yml down
           docker-compose -f docker-compose-ci.yml up -d --build
