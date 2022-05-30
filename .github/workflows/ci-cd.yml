@@ -25,14 +25,16 @@ jobs:
         run: ssh-keyscan -H ${{ secrets.SSH_HOST }} > ~/.ssh/known_hosts
         
       - name: Environment set
-      - run: echo "SECRET_KEY=${{secrets.SECRET_KEY}}" >> .env
-      - run: echo "ALLOWED_HOSTS=${{secrets.ALLOWED_HOSTS}}" >> .env
-      - run: echo "DEBUG=${{secrets.DEBUG}}" >> .env
-      - run: echo "POSTGRES_PASSWORD=${{secrets.POSTGRES_PASSWORD}}" >> .env
-      - run: echo "POSTGRES_NAME=${{secrets.POSTGRES_NAME}}" >> .env
-      - run: echo "POSTGRES_USER=${{secrets.POSTGRES_USER}}" >> .env
-      - run: echo "POSTGRES_DB=${{secrets.POSTGRES_DB}}" >> .env
-      - run: echo "DATABASE_URL=${{secrets.DATABASE_URL}}" >> .env
+      - run: |
+          echo "SECRET_KEY=${{secrets.SECRET_KEY}}" >> .env
+          echo "ALLOWED_HOSTS=${{secrets.ALLOWED_HOSTS}}" >> .env
+          echo "DEBUG=${{secrets.DEBUG}}" >> .env
+          echo "POSTGRES_PASSWORD=${{secrets.POSTGRES_PASSWORD}}" >> .env
+          echo "POSTGRES_NAME=${{secrets.POSTGRES_NAME}}" >> .env
+          echo "POSTGRES_USER=${{secrets.POSTGRES_USER}}" >> .env
+          echo "POSTGRES_DB=${{secrets.POSTGRES_DB}}" >> .env
+          echo "DATABASE_URL=${{secrets.DATABASE_URL}}" >> .env
+          cat .env
         
       - name: Checkout
         uses: actions/checkout@v1
